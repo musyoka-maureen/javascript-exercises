@@ -88,6 +88,7 @@ for (const artist of artists) {
   console.log(`=== ${artist} ===`);
   console.log(`Listen to ${artist} now on every platform`);
 }
+// I only added a new artist to the array; the loop did not need to change.
 
 // TODO: Part six.
 // Assign the menu to a second variable, push a new item through the second name, and log both
