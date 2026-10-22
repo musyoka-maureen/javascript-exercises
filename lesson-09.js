@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 // Lesson 09 exercise: The DOM and forms
 // In your exercise repository, create a branch named `lesson-09-exercise` and switch to it.
@@ -11,12 +11,20 @@
 // the DevTools Console rather than in a terminal. In a comment, state what the `defer`
 // attribute prevented.
 
-
+console.log("Log one sentence to the console");
+console.log(document.title);
+//defer ensures the script doesn't reach for elements that don't exist yet, it defers the running of the script until the elements exist.
 // TODO: Part two.
 // Select the page's `h1` with `querySelector` and replace its `textContent` with a label name
 // of your choosing. Select the tagline by its class and change its text, then add the provided
 // highlight class to it through `classList`.
 
+const heading = document.querySelector("h1");
+const tagline = document.querySelector(".tagline");
+
+heading.textContent = "My Music Library";
+tagline.textContent = "Discover amazing artists";
+tagline.classList.add("highlight");
 
 // TODO: Part three.
 // The file provides the artists as an array of objects. Loop over it, create an `article`
@@ -32,20 +40,51 @@ const artists = [
   { name: "Miyagi and Andy Panda", genre: "Hip-hop", total: "16:21" },
   { name: "Johnny Cash", genre: "Country", total: "15:40" },
 ];
+artists.push({ name: "Burna Boy", genre: "Afrobeats", total: "18:24" });
 
+const cards = document.querySelector(".cards");
+
+// Part 3: reusable card function
+function createArtistCard(artist) {
+  const article = document.createElement("article");
+
+  const heading = document.createElement("h3");
+  heading.textContent = artist.name;
+
+  const paragraph = document.createElement("p");
+  paragraph.textContent = `${artist.genre} — ${artist.total}`;
+
+  article.append(heading, paragraph);
+  cards.append(article);
+}
+// Part 3: create cards for existing artists
+for (const artist of artists) {
+  createArtistCard(artist);
+}
 
 // TODO: Part four.
 // Add a sixth artist object of your own invention to the array and reload. Confirm that the
 // sixth card exists, and state in a comment what you did not have to change, compared with the
 // five hand-copied cards this course opened on.
-
-
+artists.push({
+  name: "Burna Boy",
+  genre: "Afrobeats",
+  total: "18:24",
+});
+// I did not have to change the loop because it automatically handles every artist added in the array.
 // TODO: Part five.
 // The page provides a button with the shuffle class and an element with the featured class. On
 // click, pick a random artist using the random recipe with `Math.floor`, and write a featured
 // sentence into the featured element with a template literal.
+const shuffleButton = document.querySelector(".shuffle");
+const featured = document.querySelector(".featured");
 
+shuffleButton.addEventListener("click", () => {
+  const randomIndex = Math.floor(Math.random() * artists.length);
+  const artist = artists[randomIndex];
 
+  featured.textContent = `Featured artist: ${artist.name} — ${artist.genre}`;
+});
 // TODO: Part six.
 // The page provides a form with the signup class and a text input with the artist-name id. On
 // submit, call `preventDefault` on the event, read the input's `value`, and, when the value is
@@ -55,7 +94,29 @@ const artists = [
 // work. As a stretch, clear the input by assigning it an empty string after each successful
 // addition.
 
+const signupForm = document.querySelector(".signup");
+const artistInput = document.querySelector("#artist-name");
 
+signupForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const name = artistInput.value;
+
+  // An empty string ("") is falsy, so an empty submission does nothing.
+  if (name) {
+    const newArtist = {
+      name: name,
+      genre: "Unknown",
+      total: "00:00",
+    };
+
+    artists.push(newArtist);
+    createArtistCard(newArtist);
+
+    artistInput.value = "";
+  }
+});
+// An empty string ("") is falsy, so an empty submission does nothing.
 // TODO: Save deliberately, commit with a clear message, push the branch, and open a pull request
 // into main. This is the final exercise of the course, and the reviewed merge closes it.
 // TODO: Submit the link to the pull request for review.
